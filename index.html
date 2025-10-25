@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Notepad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 400px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .save-btn {
+            background: #667eea;
+            color: white;
+        }
+        
+        .save-btn:hover {
+            background: #5568d3;
+        }
+        
+        .clear-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .clear-btn:hover {
+            background: #da190b;
+        }
+        
+        .load-btn {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .load-btn:hover {
+            background: #45a049;
+        }
+        
+        .char-count {
+            text-align: right;
+            color: #666;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Online Notepad</h1>
+        <textarea id="notepad" placeholder="Start typing your notes here..."></textarea>
+        <div class="char-count" id="charCount">Characters: 0</div>
+        <div class="button-group">
+            <button class="save-btn" onclick="saveNote()">💾 Save</button>
+            <button class="load-btn" onclick="loadNote()">📂 Load</button>
+            <button class="clear-btn" onclick="clearNote()">🗑️ Clear</button>
+        </div>
+    </div>
+    
+    <script>
+        const textarea = document.getElementById('notepad');
+        const charCount = document.getElementById('charCount');
+        
+        // Load saved note on page load
+        window.onload = function() {
+            loadNote();
+            updateCharCount();
+        };
+        
+        // Update character count on input
+        textarea.addEventListener('input', updateCharCount);
+        
+        function updateCharCount() {
+            const count = textarea.value.length;
+            charCount.textContent = `Characters: ${count}`;
+        }
+        
+        function saveNote() {
+            const note = textarea.value;
+            localStorage.setItem('notepad', note);
+            alert('✓ Note saved successfully!');
+        }
+        
+        function loadNote() {
+            const savedNote = localStorage.getItem('notepad');
+            if (savedNote) {
+                textarea.value = savedNote;
+                updateCharCount();
+            }
+        }
+        
+        function clearNote() {
+            if (confirm('Are you sure you want to clear all text?')) {
+                textarea.value = '';
+                updateCharCount();
+            }
+        }
+        
+        // Auto-save every 30 seconds
+        setInterval(function() {
+            if (textarea.value) {
+                localStorage.setItem('notepad', textarea.value);
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
